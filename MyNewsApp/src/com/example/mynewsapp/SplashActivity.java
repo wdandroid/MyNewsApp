@@ -1,10 +1,13 @@
 package com.example.mynewsapp;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
@@ -14,6 +17,7 @@ public class SplashActivity extends Activity {
 	
 	private LinearLayout ll_splash_bg;
 
+	private SharedPreferences sp;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -24,7 +28,9 @@ public class SplashActivity extends Activity {
 		
 		ll_splash_bg = (LinearLayout) findViewById(R.id.ll_splash_bg);
 	
-		showAnimation();
+		sp=getSharedPreferences("config", MODE_PRIVATE);
+		showAnimation(); //3s
+		
 	
 	}
 
@@ -54,6 +60,41 @@ public class SplashActivity extends Activity {
 
 		ll_splash_bg.setAnimation(as);
 		as.start();
+		
+		as.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				
+				if (sp!=null) {
+					
+					if(!sp.getBoolean("is_show_guide", false))
+					{
+						startActivity(new Intent(getApplicationContext(), GuideActivity.class));
+					}else {
+						startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+					}
+	                finish();
+	
+				}
+
+				
+			}
+		});
 		
 	}
 	
