@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.example.mynewsapp.R;
 import com.example.pages.BasePage;
+import com.example.pages.GovAffairsPage;
+import com.example.pages.HomePage;
+import com.example.pages.NewsCenterPage;
+import com.example.pages.SettingPage;
+import com.example.pages.SmartServicePage;
+import com.example.view.NoScrollViewPager;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,14 +19,18 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class ContentFragment extends Fragment {
 
 	
-	private ViewPager vp_content_fragment;
+	private NoScrollViewPager vp_content_fragment;
 
 	List<BasePage> pageList;
+
+	private RadioGroup rg_contentfragment_tab;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,8 +44,10 @@ public class ContentFragment extends Fragment {
 		
 		
 		View view =inflater.inflate(R.layout.content_fragment, null);
-		vp_content_fragment = (ViewPager) view.findViewById(R.id.vp_content_fragment);
+		vp_content_fragment = (NoScrollViewPager) view.findViewById(R.id.vp_content_fragment);
 
+		rg_contentfragment_tab = (RadioGroup) view.findViewById(R.id.rg_contentfragment_tab);
+		
 		return view;
 	}
 	
@@ -44,15 +56,66 @@ public class ContentFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		//初始化话数据
 		pageList=new ArrayList<BasePage>();
 		
-		for(int i=0;i<5;i++)
+		/*for(int i=0;i<5;i++)
 		{
 			
 			pageList.add(new BasePage(getActivity()));
-		}
-		
+		}*/
+		pageList.add(new HomePage(getActivity()));
+		pageList.add(new NewsCenterPage(getActivity()));
+		pageList.add(new SmartServicePage(getActivity()));
+		pageList.add(new GovAffairsPage(getActivity()));
+		pageList.add(new SettingPage(getActivity()));
 		vp_content_fragment.setAdapter(new MyPageAdapter());
+		
+		//给radiogroup设置点击事件
+		
+		rg_contentfragment_tab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// TODO Auto-generated method stub
+				
+				switch (checkedId) {
+				case R.id.rb_contentfragment_index:
+					vp_content_fragment.setCurrentItem(0,false);
+					pageList.get(0).initData(); 
+					break;
+				case R.id.rb_contentfragment_news:
+					vp_content_fragment.setCurrentItem(1,false);
+					pageList.get(1).initData(); 
+
+					break;
+				case R.id.rb_contentfragment_service:
+					vp_content_fragment.setCurrentItem(2,false);
+					pageList.get(2).initData(); 
+
+					break;
+				case R.id.rb_contentfragment_gov:
+					vp_content_fragment.setCurrentItem(3,false);
+					pageList.get(3).initData(); 
+
+					break;
+				case R.id.rb_contentfragment_setting:
+					vp_content_fragment.setCurrentItem(4,false);
+					pageList.get(4).initData(); 
+
+					break;
+					
+
+				default:
+					break;
+				}
+				
+			}
+		});
+		
+		
+		rg_contentfragment_tab.check(R.id.rb_contentfragment_index);
+		
 		super.onActivityCreated(savedInstanceState);
 	}
 	
@@ -77,6 +140,9 @@ public class ContentFragment extends Fragment {
 			// TODO Auto-generated method stub
 			
 			container.addView(pageList.get(position).pageRootView);
+			//pageList.get(position).initData(); //不能再这里调用，因为这里viewpager 会提前一个page去调用
+			
+			
 			return pageList.get(position).pageRootView;
 		}
 		
