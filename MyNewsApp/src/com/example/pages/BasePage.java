@@ -1,5 +1,6 @@
 package com.example.pages;
 
+import com.example.mynewsapp.MainActivity;
 import com.example.mynewsapp.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -7,6 +8,8 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import android.R.raw;
 import android.app.Activity;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ public class BasePage {
 	public View pageRootView;
 	public TextView tv_basepage_titile;
 	public  ImageButton bt_basepage_leftbt;
+	public FrameLayout fl_basepager_content;
 	
 	public BasePage(Activity activity){
 		
@@ -32,6 +36,19 @@ public class BasePage {
 		tv_basepage_titile = (TextView) pageRootView.findViewById(R.id.tv_basepage_titile);
 	
 	    bt_basepage_leftbt = (ImageButton) pageRootView.findViewById(R.id.bt_basepage_leftbt);
+	    
+	    fl_basepager_content = (FrameLayout) pageRootView.findViewById(R.id.fl_basepager_content);
+	    
+	    
+	    bt_basepage_leftbt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				MainActivity mainActivity =(MainActivity) mActivity;
+				mainActivity.toggle();
+			}
+		});
 	}
 	
 	
@@ -43,7 +60,7 @@ public class BasePage {
 	public void setSlidingMenuEnalbe(boolean enable){
 		SlidingFragmentActivity mainActivity=  (SlidingFragmentActivity) mActivity;
 		SlidingMenu slidingMenu = mainActivity.getSlidingMenu();
-		//ÈçºÎÄÃµ½slidingmenu
+		//ï¿½ï¿½ï¿½ï¿½Ãµï¿½slidingmenu
 		if (!enable) {
 
 			slidingMenu.setTouchModeAbove(slidingMenu.TOUCHMODE_NONE);

@@ -39,7 +39,7 @@ public class ContentFragment extends Fragment {
 		//return super.onCreateView(inflater, container, savedInstanceState);
 	
 	   /* TextView tvTextView=new TextView(getActivity());
-	    tvTextView.setText("ÄÚÈÝÒ³");
+	    tvTextView.setText("ï¿½ï¿½ï¿½ï¿½Ò³");
 	    return tvTextView;*/
 		
 		
@@ -56,7 +56,7 @@ public class ContentFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		//³õÊ¼»¯»°Êý¾Ý
+		//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		pageList=new ArrayList<BasePage>();
 		
 		/*for(int i=0;i<5;i++)
@@ -71,7 +71,7 @@ public class ContentFragment extends Fragment {
 		pageList.add(new SettingPage(getActivity()));
 		vp_content_fragment.setAdapter(new MyPageAdapter());
 		
-		//¸øradiogroupÉèÖÃµã»÷ÊÂ¼þ
+		//ï¿½ï¿½radiogroupï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Â¼ï¿½
 		
 		rg_contentfragment_tab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -140,7 +140,7 @@ public class ContentFragment extends Fragment {
 			// TODO Auto-generated method stub
 			
 			container.addView(pageList.get(position).pageRootView);
-			//pageList.get(position).initData(); //²»ÄÜÔÙÕâÀïµ÷ÓÃ£¬ÒòÎªÕâÀïviewpager »áÌáÇ°Ò»¸öpageÈ¥µ÷ÓÃ
+			//pageList.get(position).initData(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½viewpager ï¿½ï¿½ï¿½ï¿½Ç°Ò»ï¿½ï¿½pageÈ¥ï¿½ï¿½ï¿½ï¿½
 			
 			
 			return pageList.get(position).pageRootView;
@@ -153,6 +153,12 @@ public class ContentFragment extends Fragment {
 			container.removeView((View)object);
 			//super.destroyItem(container, position, object);
 		}
+	}
+	
+	public NewsCenterPage getNewsCenterPage(){
+		
+		 return  (NewsCenterPage) pageList.get(1);
+		
 	}
 	
 }

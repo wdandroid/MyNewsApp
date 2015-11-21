@@ -1,7 +1,15 @@
 package com.example.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cskaoyan.bean.CategoryJson;
 import com.example.fragment.LeftMenuFragment;
+import com.example.menupage.BaesMenuPage;
+import com.example.menupage.InteractMenuPage;
+import com.example.menupage.NewMenuPage;
+import com.example.menupage.PicturesMenuPage;
+import com.example.menupage.TopicMenuPage;
 import com.example.mynewsapp.MainActivity;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -12,10 +20,14 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 import android.app.Activity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NewsCenterPage extends BasePage {
 
+	private CategoryJson categoryJson;
+
+	public List<BaesMenuPage> menupagelist;
 	public NewsCenterPage(Activity activity) {
 		super(activity);
 		// TODO Auto-generated constructor stub
@@ -27,6 +39,11 @@ public class NewsCenterPage extends BasePage {
 		
 		tv_basepage_titile.setText("新闻中心");
 	    setSlidingMenuEnalbe(true);
+		
+	/*	TextView tv_basepager_content=new TextView(mActivity);
+		tv_basepager_content.setText("新闻内容");
+		
+		fl_basepager_content.addView(tv_basepager_content);*/
 
 	    System.out.println("NewsCenterPage.initData()");
 	    
@@ -47,8 +64,11 @@ public class NewsCenterPage extends BasePage {
 
  	}
 	
+	
+	
 	class MyRequestCallback  extends RequestCallBack<String>
 	{
+
 
 		@Override
 		public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -64,7 +84,7 @@ public class NewsCenterPage extends BasePage {
 			  //Gson 解析数据
 			  Gson gson = new Gson();
 			  
-			  CategoryJson categoryJson = gson.fromJson(JsonString, CategoryJson.class);
+			  categoryJson = gson.fromJson(JsonString, CategoryJson.class);
 			  
 			  System.out.println("NewsCenterPage.MyRequestCallback.onSuccess()"+categoryJson.toString());
 			  
@@ -73,6 +93,17 @@ public class NewsCenterPage extends BasePage {
 			  LeftMenuFragment leftMenuFragment = mainUI.getLeftMenuFragment();
 			  leftMenuFragment.SetCategoryData(categoryJson);
 			  
+			  //往我们的pagelist里塞数据备用
+			  
+			  menupagelist = new ArrayList<BaesMenuPage>();
+			  
+			  menupagelist.add(new NewMenuPage(mActivity));
+			  menupagelist.add(new TopicMenuPage(mActivity));
+			  menupagelist.add(new PicturesMenuPage(mActivity));
+			  menupagelist.add(new InteractMenuPage(mActivity));
+
+			  //让这个新闻也默认显示leftmenu的第一个menupage
+			  setCurrentMenuPage(0);
 		}
 
 		@Override
@@ -84,4 +115,18 @@ public class NewsCenterPage extends BasePage {
  		}
 		
 	}
+	
+	
+	public void setCurrentMenuPage(int position){
+		
+		tv_basepage_titile.setText(categoryJson.data.get(position).getTitle());
+		
+		
+		fl_basepager_content.removeAllViews();
+		fl_basepager_content.addView(menupagelist.get(position).mMenuRootView);
+		
+		
+	}
+	
+	
 }

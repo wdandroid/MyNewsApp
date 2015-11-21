@@ -28,5 +28,11 @@
             android:id="@+id/tv_basepage_titile" />
     </RelativeLayout>
 
+      
+      <FrameLayout
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:id="@+id/fl_basepager_content"
+          />
    
 </LinearLayout>
