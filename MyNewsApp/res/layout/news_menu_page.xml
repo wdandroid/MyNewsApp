@@ -11,7 +11,9 @@
         android:layout_width="fill_parent"
         />
     
-    <com.example.view.CanScrollViewPager
+   <!-- // <com.example.view.CanScrollViewPager -->
+     
+     <android.support.v4.view.ViewPager
         android:layout_width="fill_parent"
          android:layout_height="wrap_content"
           android:id="@+id/vp_newsmenupage_content"        

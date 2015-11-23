@@ -34,9 +34,10 @@ public class CanScrollViewPager extends ViewPager {
 			getParent().requestDisallowInterceptTouchEvent(true);
 	 	}
 		
-		
 		return super.onInterceptTouchEvent(ev);
 	}
+	
+	
 	
 	
 }

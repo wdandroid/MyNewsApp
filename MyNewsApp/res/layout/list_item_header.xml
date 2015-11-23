@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+       <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="fill_parent"
+         android:layout_height="170dp"
+         >
+     <com.example.view.TopNewsViewPager
+       android:layout_width="match_parent"
+       android:layout_height="170dp"
+       android:id="@+id/vp_menudetailpage_topnews"  
+      />
+     <TextView
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:background="#8000"
+         android:padding="10dp"
+         android:text="头条标题"
+         android:layout_alignParentBottom="true"
+         android:gravity="left"
+         android:id="@+id/tv_newsmenudetail_toptitle"
+         />
+     
+       <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator_topnews_ind"
+        android:padding="10dip"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        
+        />
+     </RelativeLayout>
+
+ 
