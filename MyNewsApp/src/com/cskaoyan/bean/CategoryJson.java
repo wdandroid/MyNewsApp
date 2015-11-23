@@ -18,14 +18,14 @@ public class CategoryJson {
 		String url;
 		String url1;
 
-		ArrayList<ChildrenData> children;
+		public ArrayList<ChildrenData> children;
 		
-		class ChildrenData{
+		public class ChildrenData{
 			
-			String id;
-			String title;
-			int type;
-			String url;
+			public  String id;
+			public  String title;
+			public  int type;
+			public  String url;
 			
 		}
 

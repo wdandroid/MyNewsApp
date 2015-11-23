@@ -18,11 +18,17 @@ public class NoScrollViewPager extends ViewPager {
 	}
 	
 	
+	//ç¬¬ä¸€å±‚çš„viewpageré»˜è®¤ä¸è¦å»æ‹¦æˆªä»»ä½•çš„touchevent
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		return   false;//super.onInterceptTouchEvent(ev);
+	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		// TODO Auto-generated method stub
-		return  false;  // super.onTouchEvent(ev); // ÎªÊ²Ã´·µ»Øfalse£¬²»·µ»Øtrue
+		return  false;  // super.onTouchEvent(ev); // ÎªÊ²Ã´ï¿½ï¿½ï¿½ï¿½falseï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½true
 	}
 
 }

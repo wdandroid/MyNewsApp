@@ -97,7 +97,7 @@ public class NewsCenterPage extends BasePage {
 			  
 			  menupagelist = new ArrayList<BaesMenuPage>();
 			  
-			  menupagelist.add(new NewMenuPage(mActivity));
+			  menupagelist.add(new NewMenuPage(mActivity,categoryJson.data.get(0).children));
 			  menupagelist.add(new TopicMenuPage(mActivity));
 			  menupagelist.add(new PicturesMenuPage(mActivity));
 			  menupagelist.add(new InteractMenuPage(mActivity));
@@ -121,6 +121,8 @@ public class NewsCenterPage extends BasePage {
 		
 		tv_basepage_titile.setText(categoryJson.data.get(position).getTitle());
 		
+		//点击侧边栏的时候，初始化一下该menupage页面
+		menupagelist.get(position).initData();
 		
 		fl_basepager_content.removeAllViews();
 		fl_basepager_content.addView(menupagelist.get(position).mMenuRootView);
