@@ -15,8 +15,7 @@ public class InteractMenuPage extends BaesMenuPage {
 	public View initView() {
 		// TODO Auto-generated method stub
 		
-		TextView tv = new TextView(mActivity);
-		
+		TextView tv = new TextView(mActivity);		
 		tv.setText("互动menu页面");
 		tv.setTextSize(30);
 		return tv;

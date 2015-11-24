@@ -1,10 +1,14 @@
 package com.example.menupage;
 
+import java.util.ArrayList;
+
 import com.cskaoyan.bean.CategoryJson.MenuData.ChildrenData;
 import com.cskaoyan.bean.MenuDetialNews;
 import com.cskaoyan.bean.MenuDetialNews.MenuDetailData.NewsData;
 import com.example.global.GlobalConstanc;
 import com.example.mynewsapp.R;
+import com.example.view.RefreshListView;
+import com.example.view.RefreshListView.RefreshingListener;
 import com.google.gson.Gson;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -14,6 +18,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import android.R.bool;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +26,7 @@ import android.provider.SyncStateContract.Constants;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +45,19 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 	MenuDetialNews  menudetaildata;
 	
  	private ViewPager vp_menudetailpage_topnews;
-	private ListView lv_menudetailpage_news;
+	private RefreshListView lv_menudetailpage_news;
 
 	private TextView tv_newsmenudetail_toptitle;
 
 	private CirclePageIndicator indiactor;
 
 	private View headerview;
+	
+	private String moreUrl;
+	
+	private ArrayList<NewsData> listdata;
+
+	private MyListViewAdatper myListViewAdatper;
 	
 	public NewsMenuDetailPage(Activity mActivity,ChildrenData child) {
 		super(mActivity);
@@ -60,17 +72,41 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 		
 		//tv = new TextView(mActivity);
 		View view = View.inflate(mActivity, R.layout.news_menu_detailpage, null);
-		
+		lv_menudetailpage_news = (RefreshListView) view.findViewById(R.id.lv_menudetailpage_news);
+
 		
 		headerview = View .inflate(mActivity, R.layout.list_item_header, null);
-		
 		vp_menudetailpage_topnews = (ViewPager) headerview.findViewById(R.id.vp_menudetailpage_topnews);
 		tv_newsmenudetail_toptitle = (TextView) headerview.findViewById(R.id.tv_newsmenudetail_toptitle);
 		indiactor = (CirclePageIndicator) headerview.findViewById(R.id.indicator_topnews_ind);
 		
 		
-		lv_menudetailpage_news = (ListView) view.findViewById(R.id.lv_menudetailpage_news);
+		//处理listview的数据填充
+		lv_menudetailpage_news.addHeaderView(headerview);
 		
+		lv_menudetailpage_news.setRefreshingListener(new RefreshingListener() {			
+			@Override
+			public void refresh() {
+				// TODO Auto-generated method stub
+				getDataFromServer() ;
+			}
+
+			@Override
+			public void loadmore() {
+				// TODO Auto-generated method stub
+				
+				if (moreUrl!=null) { //此时才需去load
+					getMoreDataFromServer();
+
+				}else {
+					Toast.makeText(mActivity, "没有更多新闻了，休息下吧", 0).show();
+					lv_menudetailpage_news.onLoadmoreComplete();
+				}
+				
+			}
+			
+			
+		}); 
 		
  		return view;
 	}
@@ -82,15 +118,43 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 /*		tv.setText(detaildata.title);
 		tv.setTextColor(Color.RED);
 		tv.setTextSize(30);
-		tv.setGravity(Gravity.CENTER);*/
-		
-		HttpUtils httpUtils =new HttpUtils() ;
-		httpUtils.send(HttpMethod.GET, GlobalConstanc.Server_URL+detaildata.url, new MyRequestCallback());
-		
-		
-		
+		tv.setGravity(Gravity.CENTER);*/		
+		getDataFromServer();
 		super.initData();
 	}
+
+	private void getDataFromServer() {
+		HttpUtils httpUtils =new HttpUtils() ;
+		httpUtils.send(HttpMethod.GET, GlobalConstanc.Server_URL+detaildata.url, new MyRequestCallback());
+	}
+	
+	
+	private void getMoreDataFromServer() {
+		HttpUtils httpUtils =new HttpUtils() ;
+		httpUtils.send(HttpMethod.GET, GlobalConstanc.Server_URL+moreUrl, new RequestCallBack<String>() {
+
+			@Override
+			public void onSuccess(ResponseInfo<String> responseInfo) {
+				// TODO Auto-generated method stub
+				String resultjson= responseInfo.result;
+
+				System.out.println("NewsMenuDetailPage.onSuccess()"+resultjson);
+
+	            parseData(resultjson,true);	
+
+				lv_menudetailpage_news.onLoadmoreComplete();
+
+			}
+
+			@Override
+			public void onFailure(HttpException error, String msg) {
+				// TODO Auto-generated method stub
+				lv_menudetailpage_news.onLoadmoreComplete();
+
+			}
+		});
+	}
+	
 	
 	class MyRequestCallback extends RequestCallBack<String>{
 
@@ -99,19 +163,21 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 			// TODO Auto-generated method stub
 			
 			String resultjson= responseInfo.result;
-			
-			parseData(resultjson);
-			
+			System.out.println("NewsMenuDetailPage.onSuccess()"+resultjson);
+
+            parseData(resultjson,false);	
+            
+            lv_menudetailpage_news.onRefreshComplete();
 		}
-
-	
-
+		
 		@Override
 		public void onFailure(HttpException error, String msg) {
 			// TODO Auto-generated method stub
 			
 			error.printStackTrace();
 			Toast.makeText(mActivity, msg, 1).show();
+            lv_menudetailpage_news.onRefreshComplete();
+
 		}
 		
 		
@@ -119,49 +185,60 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 	}
 	
 	
-	private void parseData(String resultjson) {
+	private void parseData(String resultjson,boolean ismore) {
 		// TODO Auto-generated method stub
 		
 		Gson gson =new Gson();
 		
 		menudetaildata = gson.fromJson(resultjson, MenuDetialNews.class);
 		
-		vp_menudetailpage_topnews.setAdapter(new MyPagerAdapter());
-		
-		
-		tv_newsmenudetail_toptitle.setText(menudetaildata.data.topnews.get(0).title);
+	     String more=	menudetaildata.data.more;
+		if (TextUtils.isEmpty(more)) {
+			moreUrl=null;
+		}else {
+			moreUrl=more;
+		}
+	     
+	     if (!ismore) {
+	    	 
+	    	listdata = menudetaildata.data.news;
+	    	vp_menudetailpage_topnews.setAdapter(new MyPagerAdapter());
+	 		tv_newsmenudetail_toptitle.setText(menudetaildata.data.topnews.get(0).title);
 
-		vp_menudetailpage_topnews.setOnPageChangeListener(new OnPageChangeListener() {
-			
-			@Override
-			public void onPageSelected(int position) {
-				// TODO Auto-generated method stub
-				tv_newsmenudetail_toptitle.setText(menudetaildata.data.topnews.get(position).title);
-			}
-			
-			@Override
-			public void onPageScrolled(int position, float positionOffset,
-					int positionOffsetPixels) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onPageScrollStateChanged(int state) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+	 		vp_menudetailpage_topnews.setOnPageChangeListener(new OnPageChangeListener() {
+	 			
+	 			@Override
+	 			public void onPageSelected(int position) {
+	 				// TODO Auto-generated method stub
+	 				tv_newsmenudetail_toptitle.setText(menudetaildata.data.topnews.get(position).title);
+	 			}
+	 			
+	 			@Override
+	 			public void onPageScrolled(int position, float positionOffset,
+	 					int positionOffsetPixels) {
+	 				// TODO Auto-generated method stub
+	 				
+	 			}
+	 			
+	 			@Override
+	 			public void onPageScrollStateChanged(int state) {
+	 				// TODO Auto-generated method stub
+	 				
+	 			}
+	 		});
 
+	 		indiactor.setViewPager(vp_menudetailpage_topnews);
+	 		indiactor.setSnap(true);
+	 		myListViewAdatper = new MyListViewAdatper();
+	 		lv_menudetailpage_news.setAdapter(myListViewAdatper);
+		}else {
+			
+			ArrayList<NewsData>  moredata=	menudetaildata.data.news;
+			
+			listdata.addAll(moredata);
+			myListViewAdatper.notifyDataSetChanged();
+		}
 		
-		
-		indiactor.setViewPager(vp_menudetailpage_topnews);
-		indiactor.setSnap(true);
-		
-		
-		//处理listview的数据填充
-		lv_menudetailpage_news.addHeaderView(headerview);
-		lv_menudetailpage_news.setAdapter(new MyListViewAdatper());
 		
 	}
 	
@@ -182,7 +259,7 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return menudetaildata.data.news.size();
+			return listdata.size();
 		}
 
 		@Override
@@ -220,7 +297,7 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 			
 			}
 			
-			NewsData newsData = menudetaildata.data.news.get(position);
+			NewsData newsData = listdata.get(position);
 			
 			holder. tv_newsitme_title.setText(newsData.title);
 			holder.  tv_newsitme_time .setText(newsData.pubdate);
