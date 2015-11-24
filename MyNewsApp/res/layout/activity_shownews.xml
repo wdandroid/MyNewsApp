@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:background="@drawable/title_red_bg">
+         
+         <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/back"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/bt_shownews_leftbt"
+            />  
+          
+
+            
+          <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/icon_share"
+            android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
+            
+            android:id="@+id/bt_shownews_share"
+            />  
+        
+                   <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_textsize"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/bt_shownews_setsize"
+            android:layout_toLeftOf="@id/bt_shownews_share"
+            />  
+        
+        </RelativeLayout>
+        <FrameLayout
+            
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            
+        >
+    <WebView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/wb_shownews_content"
+        />
+    
+       <ProgressBar
+        android:id="@+id/pb_shownews_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:indeterminateDrawable="@drawable/custom_progress" />
+    </FrameLayout>
+
+</LinearLayout>

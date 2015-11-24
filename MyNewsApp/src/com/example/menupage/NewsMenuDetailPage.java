@@ -2,11 +2,18 @@ package com.example.menupage;
 
 import java.util.ArrayList;
 
+import javax.crypto.Mac;
+
+import cn.sharesdk.facebook.e;
+import cn.sharesdk.sina.weibo.h;
+import cn.sharesdk.wechat.utils.m;
+
 import com.cskaoyan.bean.CategoryJson.MenuData.ChildrenData;
 import com.cskaoyan.bean.MenuDetialNews;
 import com.cskaoyan.bean.MenuDetialNews.MenuDetailData.NewsData;
 import com.example.global.GlobalConstanc;
 import com.example.mynewsapp.R;
+import com.example.mynewsapp.ShowNewsActivity;
 import com.example.view.RefreshListView;
 import com.example.view.RefreshListView.RefreshingListener;
 import com.google.gson.Gson;
@@ -20,6 +27,9 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import android.R.bool;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.provider.SyncStateContract.Constants;
@@ -30,6 +40,8 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.BaseAdapter;
@@ -107,6 +119,42 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 			
 			
 		}); 
+		
+		
+		lv_menudetailpage_news.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				//记录一下当前点击的新闻id
+				NewsData newsData = listdata.get(position-2);//包含了两个header
+
+				SharedPreferences sp = mActivity.getSharedPreferences("config", mActivity.MODE_PRIVATE);
+				
+				String histroy = sp.getString("history", "");
+				
+				
+				if (!histroy.contains(newsData.id+"")) {
+					String newhistory =histroy+newsData.id+",";
+					Editor edit = sp.edit();
+					edit.putString("history", newhistory);
+					edit.commit();
+				}
+				
+				
+				
+				//调到新的activity展示
+ 				
+			   System.out
+					.println("NewsMenuDetailPage.initView() onItemClick()  position"+position);
+				
+				Intent intent = new Intent(mActivity, ShowNewsActivity.class);
+				
+				intent.putExtra("url", newsData.url);
+				mActivity.startActivity(intent);
+			}
+		});
 		
  		return view;
 	}
@@ -300,6 +348,18 @@ public class NewsMenuDetailPage extends BaesMenuPage {
 			NewsData newsData = listdata.get(position);
 			
 			holder. tv_newsitme_title.setText(newsData.title);
+			SharedPreferences sp =mActivity.getSharedPreferences("config", mActivity.MODE_PRIVATE);
+			String history = sp.getString("history", "");
+			 
+			if (history.contains(newsData.id+"")) {
+				holder. tv_newsitme_title.setTextColor(Color.GRAY);	
+				System.out
+						.println("NewsMenuDetailPage.MyListViewAdatper.setTextColor()"+history+":"+newsData.id);
+			}else {
+				holder. tv_newsitme_title.setTextColor(Color.BLACK);	 
+
+			}
+			
 			holder.  tv_newsitme_time .setText(newsData.pubdate);
 			bitmaputils.display(holder.iv, newsData.listimage);
 			

@@ -20,6 +20,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 import android.app.Activity;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +63,17 @@ public class NewsCenterPage extends BasePage {
 	    httpUtils.send(HttpMethod.GET, "http://10.0.2.2:8080/zhbj/categories.json", new MyRequestCallback());
 	    
 	    System.out.println("NewsCenterPage.initData() over");
+	    
+	    bt_basepage_rigthbt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				PicturesMenuPage picturesMenuPage = (PicturesMenuPage) menupagelist.get(2);
+				
+				picturesMenuPage.changeview();
+			}
+		});
 
  	}
 	

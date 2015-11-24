@@ -21,6 +21,7 @@ public class BasePage {
 	public TextView tv_basepage_titile;
 	public  ImageButton bt_basepage_leftbt;
 	public FrameLayout fl_basepager_content;
+	public ImageButton bt_basepage_rigthbt;
 	
 	public BasePage(Activity activity){
 		
@@ -38,6 +39,8 @@ public class BasePage {
 	    bt_basepage_leftbt = (ImageButton) pageRootView.findViewById(R.id.bt_basepage_leftbt);
 	    
 	    fl_basepager_content = (FrameLayout) pageRootView.findViewById(R.id.fl_basepager_content);
+	    
+	    bt_basepage_rigthbt = (ImageButton) pageRootView.findViewById(R.id.bt_basepage_rigthbt);
 	    
 	    
 	    bt_basepage_leftbt.setOnClickListener(new OnClickListener() {
