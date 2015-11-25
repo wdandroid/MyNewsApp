@@ -4,6 +4,7 @@ import com.cskaoyan.bean.PhotoData;
 import com.cskaoyan.bean.PhotoData.PhotoDetail.Newsdata;
 import com.example.global.GlobalConstanc;
 import com.example.mynewsapp.R;
+import com.exmaple.utils.MyBitmapUtils;
 import com.google.gson.Gson;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -107,13 +108,14 @@ public class PicturesMenuPage extends BaesMenuPage {
 	class MyAdpater extends BaseAdapter{
 
 		
-		BitmapUtils bitmaputils;
+		//BitmapUtils bitmaputils;
 		
+		  MyBitmapUtils Mybitmaputils;
 		
 		public MyAdpater() {
 			super();
 			// TODO Auto-generated constructor stub
-			bitmaputils = new BitmapUtils(mActivity);
+			Mybitmaputils = new MyBitmapUtils();
 		}
 
 		@Override
@@ -138,13 +140,13 @@ public class PicturesMenuPage extends BaesMenuPage {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			
-			View view = View.inflate(mActivity, R.layout.list_photo_item, null);
+			 View view = View.inflate(mActivity, R.layout.list_photo_item, null);
 
 		     ImageView  iv_phtot_pic=(ImageView) 	view.findViewById(R.id.iv_phtot_pic);
 			 TextView tv_photo_title = (TextView) view.findViewById(R.id.tv_photo_title);
 		     
 			 Newsdata newsdata = photoData.data.news.get(position);			 
-			 bitmaputils.display(iv_phtot_pic, newsdata.listimage);
+			 Mybitmaputils.display(iv_phtot_pic, newsdata.listimage);
 			 
 			 tv_photo_title.setText(newsdata.title);
  			 
