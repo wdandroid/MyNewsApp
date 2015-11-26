@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 
 
+
+import com.exmaple.utils.Translate;
+
 import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
@@ -39,6 +42,7 @@ public class GuideActivity extends Activity {
 	private LinearLayout ll_guide_greypoints;
 	private View redpoint;
 	private Button bt_guide_enter;
+	private int pixFromDp;
 
 
 	@Override
@@ -47,7 +51,7 @@ public class GuideActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		
-		   //Ê¹ÓÃ´úÂëÈ¥µô±êÌâÀ¸
+		   //Ê¹ï¿½Ã´ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		   requestWindowFeature(Window.FEATURE_NO_TITLE);
 		   setContentView(R.layout.guide_layout);
 		   
@@ -78,22 +82,23 @@ public class GuideActivity extends Activity {
 			   ivlist.add(iv);
 		   }
 		   
-		   //³õÊ¼»¯Èý¸ö»ÒÉ«µÄµã		  
+		   //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Äµï¿½		  
 		   for(int i=0;i<3;i++){
 
 			   View greypoint =new View(getApplicationContext());
 			   greypoint.setBackgroundResource(R.drawable.greypoint);
 			   
-			   LayoutParams layoutParams = new LayoutParams(10, 10);//10¸öÏñËØ
+			   pixFromDp = Translate.getPixFromDp(getApplicationContext(), 10);
+			   LayoutParams layoutParams = new LayoutParams(pixFromDp, pixFromDp);//10åƒç´ 
 			   
 			    if (i>0) {
-				  layoutParams.leftMargin=10;
+				  layoutParams.leftMargin=pixFromDp;
 			    }
 			   
 			   greypoint.setLayoutParams(layoutParams);
 			   
 			 /*
-			  * //onmeasure  onlayout  ondraw ´Ë´¦layoutParams»ñÈ¡²»µ½
+			  * //onmeasure  onlayout  ondraw ï¿½Ë´ï¿½layoutParamsï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 			  *   LayoutParams layoutParams = greypoint.getLayoutParams();
 		   
 			   layoutParams.height=10;
@@ -116,17 +121,17 @@ public class GuideActivity extends Activity {
 			return 3;
 		}
 
-		//´Ë´¦´«µÄobject ¼´ÊÇÎÒÃÇinstantiateItem·µ»ØµÄ
+		//ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½object ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½instantiateItemï¿½ï¿½ï¿½Øµï¿½
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
 			// TODO Auto-generated method stub
-			//arg0   £º imageview  
+			//arg0   ï¿½ï¿½ imageview  
 			//arg1 : imageview
 			return arg0==arg1;
 		}
 		
 		
-		//ÍùviewpageÀïÌí¼ÓviewµÄapi
+		//ï¿½ï¿½viewpageï¿½ï¿½ï¿½ï¿½ï¿½viewï¿½ï¿½api
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			// TODO Auto-generated method stub
@@ -159,7 +164,7 @@ public class GuideActivity extends Activity {
 							+" positionOffsetPixels:"+positionOffsetPixels);*/
 			// TODO Auto-generated method stub
 			
-			 int leftmargin = (int) (position*20 +20*positionOffset);
+			 int leftmargin = (int) (position*2*pixFromDp +2*pixFromDp*positionOffset);
 			
 			 android.widget.FrameLayout.LayoutParams  layoutParams = (android.widget.FrameLayout.LayoutParams) redpoint.getLayoutParams();			
 			 layoutParams.leftMargin=leftmargin;
